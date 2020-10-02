@@ -5,7 +5,9 @@ var currentQuestion = document.querySelector("p")
 var startButton = document.getElementById("start")
 var timerEl = document.getElementById("countDown")
 var questNum = 0
-
+var timer = 60
+var textForm = document.createElement("input")
+    textForm.setAttribute("type", "text")
 
 // Quiz Questions
 var questArray = [
@@ -73,15 +75,22 @@ var buttonSection = document.createElement("div")
 
 // Timer
 function startTimer(){
-    var timer = 60;
-
+    
     var timeInterval = setInterval(function() {
         timerEl.textContent = timer + " seconds remaining";
         timer--;
     
-        if (timer === 0 || questNum === 6) {
+        if (questNum === 6) {
+            var score = localStorage.setItem("score", timer)
             timerEl.textContent = "";
             clearInterval(timeInterval);
+            document.body.append(textForm)
+            highScoreScreen()
+        } else if (timer === 0){
+            var score = localStorage.setItem("score", timer)
+            timerEl.textContent = "";
+            clearInterval(timeInterval);
+            document.body.append(textForm)
             highScoreScreen()
         }
     
@@ -110,6 +119,8 @@ startButton.addEventListener("click", function(){
 function nextQuestion(){
     
     questNum++
+    
+    if (questNum < 6){
     currentQuestionNumber.textContent = "Question #" + questNum;
     
     //Buttons
@@ -122,59 +133,51 @@ function nextQuestion(){
     document.getElementById("button-C").setAttribute('value', questArray[questNum].answer3)
     buttonD.textContent = questArray[questNum].answer4
     document.getElementById("button-D").setAttribute('value', questArray[questNum].answer4)
+    }
     
-    // Button Presses
-    buttonA.addEventListener('click', function(event){
-        console.log("Button clicked")
-        console.log("event value: ", event.target.value)
-        if (event.target.value === questArray[questNum].correctAnswer){
-            console.log("it worked")
-            nextQuestion()
-        } else {
-            console.log("it didn't work")
-            nextQuestion()
-        }
-    })
-    buttonB.addEventListener('click', function(event){
-        console.log("Button clicked")
-        console.log("event value: ", event.target.value)
-        if (event.target.value === questArray[questNum].correctAnswer){
-            console.log("it worked")
-            nextQuestion()
-        } else {
-            console.log("it didn't work")
-            nextQuestion()
-        }
-    })
-    buttonC.addEventListener('click', function(event){
-        console.log("Button clicked")
-        console.log("event value: ", event.target.value)
-        if (event.target.value === questArray[questNum].correctAnswer){
-            console.log("it worked")
-            nextQuestion()
-        } else {
-            console.log("it didn't work")
-            nextQuestion()
-        }
-    })
-    buttonD.addEventListener('click', function(event){
-        console.log("Button clicked")
-        console.log("event value: ", event.target.value)
-        if (event.target.value === questArray[questNum].correctAnswer){
-            console.log("it worked")
-            nextQuestion()
-        } else {
-            console.log("it didn't work")
-            nextQuestion()
-        }
-    })
-
-
-    
-    
-
 }
 
+// Button Presses
+buttonA.addEventListener('click', function(event){
+        if (event.target.value === questArray[questNum].correctAnswer){
+        timerEl.textContent = "Correct!"
+        nextQuestion()
+    } else {
+        timerEl.textContent = "Incorrect :("
+        timer = timer - 10
+        nextQuestion()
+    }
+})
+buttonB.addEventListener('click', function(event){
+    if (event.target.value === questArray[questNum].correctAnswer){
+        timerEl.textContent = "Correct!"
+        nextQuestion()
+    } else {
+        timerEl.textContent = "Incorrect :("
+        timer = timer - 10
+        nextQuestion()
+    }
+})
+buttonC.addEventListener('click', function(event){
+    if (event.target.value === questArray[questNum].correctAnswer){
+        timerEl.textContent = "Correct!"
+        nextQuestion()
+    } else {
+        timerEl.textContent = "Incorrect :("
+        timer = timer - 10
+        nextQuestion()
+    }
+})
+buttonD.addEventListener('click', function(event){
+    if (event.target.value === questArray[questNum].correctAnswer){
+        timerEl.textContent = "Correct!"
+        nextQuestion()
+    } else {
+        timerEl.textContent = "Incorrect :("
+        timer = timer - 10
+        nextQuestion()
+    }
+})
 
 
 // High Score
@@ -182,10 +185,17 @@ function highScoreScreen(){
     currentQuestionNumber.textContent = "All done!"
     currentQuestion.textContent= "Nice Job! Enter your initials"
     buttonSection.remove()
+
+    timerEl.textContent = "Your Score is " + localStorage.getItem("score")
     
-    var textForm = document.createElement("input")
-    textForm.setAttribute("type", "text")
-    document.body.append(textForm)
+    textForm.addEventListener("keydown", function(event){
+        var player = textForm.value
+        if (event.keyCode === 13){
+            event.preventDefault()
+            var initials = localStorage.setItem("player", player)
+            console.log(localStorage.getItem("player"))
+        }
+    })
 
 
 }
