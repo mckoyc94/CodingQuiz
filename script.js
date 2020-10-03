@@ -79,7 +79,9 @@ function startTimer(){
     var timeInterval = setInterval(function() {
         timerEl.textContent = timer + " seconds remaining";
         timer--;
-    
+        
+        // Timer function ends if all questions are answered or timer runs out
+        // Once timer ends, score is set to Local Storage
         if (questNum === 6) {
             var score = localStorage.setItem("score", timer)
             timerEl.textContent = "";
@@ -102,6 +104,7 @@ function startTimer(){
 
 startButton.addEventListener("click", function(){
     
+    //Changes buttons on page from Start Button to Answer Buttons
     startButton.remove()
     document.body.appendChild(buttonSection)
     buttonSection.appendChild(buttonA)
@@ -109,7 +112,7 @@ startButton.addEventListener("click", function(){
     buttonSection.appendChild(buttonC)
     buttonSection.appendChild(buttonD)
 
-
+    // Loads the First Question and Starts Timer
     nextQuestion()
     startTimer()
 })
@@ -117,13 +120,13 @@ startButton.addEventListener("click", function(){
 
 // Generating with Next Question
 function nextQuestion(){
-    
+    // Increments questNum to move to next question in array
     questNum++
     
     if (questNum < 6){
     currentQuestionNumber.textContent = "Question #" + questNum;
     
-    //Buttons
+    //Assigning the Buttons Values
     currentQuestion.textContent = questArray[questNum].text;
     buttonA.textContent = questArray[questNum].answer1
     document.getElementById("button-A").setAttribute('value', questArray[questNum].answer1)
@@ -139,7 +142,7 @@ function nextQuestion(){
 
 // Button Presses
 buttonA.addEventListener('click', function(event){
-        if (event.target.value === questArray[questNum].correctAnswer){
+     if (event.target.value === questArray[questNum].correctAnswer){
         timerEl.textContent = "Correct!"
         nextQuestion()
     } else {
@@ -182,18 +185,20 @@ buttonD.addEventListener('click', function(event){
 
 // High Score
 function highScoreScreen(){
+    // Creates ending screen
     currentQuestionNumber.textContent = "All done!"
     currentQuestion.textContent= "Nice Job! Enter your initials"
     buttonSection.remove()
 
     timerEl.textContent = "Your Score is " + localStorage.getItem("score")
     
+    // Allows User to enter Initials to be added to Local Storage
     textForm.addEventListener("keydown", function(event){
-        var player = textForm.value
+        var player = textForm.value.trim()
         if (event.keyCode === 13){
             event.preventDefault()
             var initials = localStorage.setItem("player", player)
-            console.log(localStorage.getItem("player"))
+            textForm.textContent("")
         }
     })
 
